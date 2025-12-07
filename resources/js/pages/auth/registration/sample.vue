@@ -448,7 +448,4 @@ const isNcr = computed(() => false);
 .font-gaming {
     font-family: "GamingSporty", sans-serif;
 }
-/* You may need to define custom colors like brand-blue, green-register etc.,
-   which are typically configured in a Tailwind CSS config file if they are
-   not standard colors. Assuming they are defined and work. */
 </style>

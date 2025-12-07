@@ -3,6 +3,7 @@
 // routes/web.php
 
 use App\Http\Controllers\RegistrationController;
+use App\Http\Controllers\PaymentController; // <-- ADD THIS LINE
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -37,10 +38,17 @@ Route::post('/api/register', [RegistrationController::class, 'register']);
 
 // --- PayMongo Redirect Handlers ---
 
-// 1. Success URL: PayMongo redirects the user here. The controller verifies and redirects to /register.
-Route::get('/payment/success', [RegistrationController::class, 'handlePaymentSuccess']);
+// 1. PayMongo Success URL (Verification Handler)
+// PayMongo redirects the user here using the team_id.
+// The controller verifies the payment status and then redirects to the final /payment/success route with the session ID.
+Route::get('/payment/verify', [RegistrationController::class, 'handlePaymentSuccess']);
 
-// 2. Failure/Cancel URL: PayMongo redirects the user here.
+
+// 2. Final Success Page (Inertia Renderer)
+// CHANGE: Point this route to the new PaymentController
+Route::get('/payment/success', [PaymentController::class, 'success']); // <-- UPDATED ROUTE
+
+// 3. Failure/Cancel URL: PayMongo redirects the user here.
 Route::get('/payment/failure', function (Request $request) {
     return Inertia::render('payment/Failure', [
         'teamId' => $request->query('team_id'),

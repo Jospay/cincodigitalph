@@ -1,8 +1,8 @@
 <template>
     <div
-        class="bg-[url('@/assets/bg.jpg')] bg-cover bg-center py-12 bg-no-repeat h-screen w-screen grid place-items-center"
+        class="bg-[url('@/assets/bg.jpg')] bg-cover bg-center py-12 bg-no-repeat min-h-screen w-full grid place-items-center"
     >
-        <div class="mx-auto w-full max-w-[1320px]">
+        <div class="mx-auto w-full max-w-[1320px] px-4">
             <div class="text-[#DCDBE0] flex gap-5 text-lg">
                 <a href="/">HOME</a>
                 <div>|</div>
@@ -10,26 +10,34 @@
             </div>
             <img
                 src="@/assets/landing-cinco-logo.png"
-                class="mx-auto w-[400px] pt-8 pb-5"
+                class="mx-auto sm:w-[400px] w-full pt-8 pb-5"
                 alt=""
             />
 
-            <div class="flex gap-5 items-center justify-center">
+            <div
+                class="flex gap-5 flex-col sm:flex-row items-center justify-center"
+            >
                 <p class="text-white text-xl">In Cooperation with:</p>
                 <img
                     src="@/assets/landing-bb88-logo.png"
-                    class="h-[60px]"
+                    class="sm:h-[60px] h-auto sm:w-auto w-full"
                     alt=""
                 />
             </div>
 
-            <h1 class="font-gaming text-center text-white text-7xl pt-12">
+            <h1
+                class="font-gaming text-center text-white md:text-7xl sm:text-5xl text-4xl pt-12"
+            >
                 <i>ENTER THE BATTLEZONE</i>
             </h1>
 
-            <img src="@/assets/moba1.jpg" class="rounded-3xl mt-7" alt="" />
+            <img
+                src="@/assets/moba1.jpg"
+                class="md:rounded-3xl rounded-xl mt-7"
+                alt=""
+            />
 
-            <div class="flex justify-center pt-14 w-full">
+            <div class="flex justify-center sm:pt-14 pt-10 w-full">
                 <a href="/register">
                     <img
                         src="@/assets/reg-button1.png"
