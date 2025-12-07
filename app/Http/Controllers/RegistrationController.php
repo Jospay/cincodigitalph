@@ -60,7 +60,6 @@ class RegistrationController extends Controller
                     'cancel_url' => self::FAILURE_URL . '?team_id=' . $teamId,
                     'success_url' => self::SUCCESS_URL . '?team_id=' . $teamId,
                     'line_items' => $items,
-                    // FIX: Corrected 'grabpay' to 'grab_pay'
                     'payment_method_types' => ['card', 'gcash', 'paymaya', 'grab_pay'],
                     'description' => 'Team Registration Payment for ' . $teamName,
                     'statement_descriptor' => 'CINCOREG',
