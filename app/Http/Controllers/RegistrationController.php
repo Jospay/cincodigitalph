@@ -28,11 +28,11 @@ class RegistrationController extends Controller
     const QR_CODE_PATH = 'qr_image/';
 
     // UPDATED: SUCCESS_URL now points to our new dedicated verification route
-    // const SUCCESS_URL = 'https://cincodigitalph.com/payment/verify';
-    // const FAILURE_URL = 'https://cincodigitalph.com/payment/failure';
+    const SUCCESS_URL = 'https://cincodigitalph.com/payment/verify';
+    const FAILURE_URL = 'https://cincodigitalph.com/payment/failure';
 
-    const SUCCESS_URL = 'http://cincodigitalph.test/payment/verify';
-    const FAILURE_URL = 'http://cincodigitalph.test/payment/failure';
+    // const SUCCESS_URL = 'http://cincodigitalph.test/payment/verify';
+    // const FAILURE_URL = 'http://cincodigitalph.test/payment/failure';
 
     protected function sendMoviderSms(string $recipient, string $message): void
     {
