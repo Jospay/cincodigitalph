@@ -100,10 +100,26 @@
         </div>
     </div>
     <!-- Start Footer -->
-
-    <!-- Start All Rights Reserved -->
-    <div class="bg-brand-blue py-2 text-white text-center text-lg">
-        <p>© 2025 Cinco Digital Inc. All Rights Reserved.</p>
+    <div
+        class="w-full bg-brand-blue md:text-md text-white py-2 text-lg flex justify-evenly items-center"
+    >
+        <div>
+            © 2025
+            <a href="./" class="hover:underline"
+                >Cinco Digital Inc. All Rights Reserved.</a
+            >
+        </div>
+        <div>
+            Designed & Developed by:
+            <a
+                class="hover:underline text-white"
+                href="https://bb88advertising.com/"
+                target="_blank"
+            >
+                BB 88 Advertising and Digital Solutions Inc.
+            </a>
+        </div>
     </div>
+
     <!-- End All Rights Reserved -->
 </template>
