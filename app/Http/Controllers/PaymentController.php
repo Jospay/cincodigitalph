@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\User; // <-- CHANGED: Import the User model
+use App\Models\User;
 
 class PaymentController extends Controller
 {
@@ -17,9 +17,9 @@ class PaymentController extends Controller
         }
 
         // --- Core Logic: Locate the registration using the session ID in the 'users' table ---
-        // CHANGED: Querying the User model instead of Registration
         $user = User::where('paymongo_checkout_session_id', $sessionId)
-            ->select('team_name') // Select the team_name column
+            ->where('transaction_status', 'paid')
+            ->select('team_name')
             ->first();
 
         // Check if a user/registration was found

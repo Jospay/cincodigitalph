@@ -128,7 +128,7 @@ onMounted(() => {
                             class="item-content-wrap relative border-5 border-white transition-all duration-200"
                         >
                             <img
-                                src="@/assets/left.jpg"
+                                src="@/assets/box-1.jpg"
                                 class="w-full"
                                 alt="News Image 5"
                             />
@@ -146,7 +146,7 @@ onMounted(() => {
                             class="item-content-wrap relative border-5 border-white transition-all duration-200"
                         >
                             <img
-                                src="@/assets/center.jpg"
+                                src="@/assets/box-2.jpg"
                                 class="w-full"
                                 alt="News Image 5"
                             />
@@ -164,7 +164,25 @@ onMounted(() => {
                             class="item-content-wrap relative border-5 border-white transition-all duration-200"
                         >
                             <img
-                                src="@/assets/right.jpg"
+                                src="@/assets/box-3.jpg"
+                                class="w-full"
+                                alt="News Image 5"
+                            />
+                            <!-- <div class="text-center absolute px-3 bottom-3 w-full">
+                            <h1
+                                class="item-title text-brand-blue px-2 bg-white text-lg/[20px] py-2 rounded-xl transition-all duration-200">
+                                Game Development <br />News
+                            </h1>
+                            </div> -->
+                        </div>
+                    </div>
+
+                    <div class="items py-5">
+                        <div
+                            class="item-content-wrap relative border-5 border-white transition-all duration-200"
+                        >
+                            <img
+                                src="@/assets/box-4.jpg"
                                 class="w-full"
                                 alt="News Image 5"
                             />

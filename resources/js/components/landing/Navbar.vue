@@ -1,3 +1,127 @@
+<script setup>
+import { onMounted, nextTick } from "vue";
+
+onMounted(() => {
+    nextTick(() => {
+        const sections = document.querySelectorAll("div[id]");
+        const mobileLinks = document.querySelectorAll(".mobile-link");
+        const navLinks = document.querySelectorAll(".xl\\:flex a");
+        const menuBtn = document.getElementById("menu-btn");
+        const mobileMenu = document.getElementById("mobile-menu");
+        const navbar = document.getElementById("navbar");
+        const scrollThreshold = 50;
+
+        // -------------------- NAVBAR BG ON SCROLL --------------------
+        function toggleNavbarBackground() {
+            if (window.scrollY > scrollThreshold) {
+                navbar.classList.add("bg-black");
+                navbar.classList.remove("text-white");
+            } else {
+                navbar.classList.remove("bg-black");
+                navbar.classList.add("text-white");
+            }
+        }
+
+        window.addEventListener("scroll", toggleNavbarBackground);
+        toggleNavbarBackground();
+
+        // Utility function to clean href into an ID
+        function extractId(href) {
+            return href.replace("/", "").replace("#", "");
+        }
+
+        // -------------------- MOBILE NAV LINK --------------------
+        function activateMobileLink() {
+            let scrollY = window.scrollY + 150;
+            let currentId = "";
+
+            sections.forEach((section) => {
+                const top = section.offsetTop;
+                const height = section.offsetHeight;
+                if (scrollY >= top && scrollY < top + height) {
+                    currentId = section.getAttribute("id");
+                }
+            });
+
+            mobileLinks.forEach((link) => {
+                const href = extractId(link.getAttribute("href"));
+                link.classList.remove("active");
+                if (href === currentId) link.classList.add("active");
+            });
+        }
+
+        mobileLinks.forEach((link) => {
+            link.addEventListener("click", function (e) {
+                const rawHref = this.getAttribute("href");
+                const targetId = extractId(rawHref);
+
+                // Check if user is already on the Home page
+                const isHomePage = window.location.pathname === "/";
+
+                if (!isHomePage) {
+                    // Allow normal navigation to /#section
+                    return;
+                }
+
+                // Already on home page → smooth scroll
+                e.preventDefault();
+
+                const target = document.getElementById(targetId);
+
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 70,
+                        behavior: "smooth",
+                    });
+                }
+
+                mobileMenu.classList.add("hidden");
+            });
+        });
+
+        window.addEventListener("scroll", activateMobileLink);
+        activateMobileLink();
+
+        // -------------------- DESKTOP NAV LINK --------------------
+        function activateLink() {
+            let scrollY = window.scrollY + 150;
+            let currentId = "";
+
+            sections.forEach((section) => {
+                const top = section.offsetTop;
+                const height = section.offsetHeight;
+                if (scrollY >= top && scrollY < top + height) {
+                    currentId = section.getAttribute("id");
+                }
+            });
+
+            navLinks.forEach((link) => {
+                const underline = link.querySelector("span span");
+                const href = extractId(link.getAttribute("href"));
+
+                link.classList.remove("text-brand-blue");
+                link.classList.add("text-white");
+                underline?.classList.remove("w-full");
+
+                if (href === currentId) {
+                    link.classList.add("text-brand-blue");
+                    link.classList.remove("text-white");
+                    underline?.classList.add("w-full");
+                }
+            });
+        }
+
+        window.addEventListener("scroll", activateLink);
+        activateLink();
+
+        // -------------------- MOBILE MENU TOGGLE --------------------
+        menuBtn?.addEventListener("click", () => {
+            mobileMenu.classList.toggle("hidden");
+        });
+    });
+});
+</script>
+
 <template>
     <nav
         id="navbar"
@@ -13,7 +137,7 @@
                 <!-- Desktop Nav Links -->
                 <div class="hidden xl:flex items-center space-x-8">
                     <a
-                        href="#"
+                        href="/#"
                         class="relative hover:text-brand-blue font-medium text-white group"
                     >
                         <span class="inline-block relative">
@@ -25,7 +149,7 @@
                     </a>
 
                     <a
-                        href="#aboutus"
+                        href="/#aboutus"
                         class="relative hover:text-brand-blue font-medium text-white group"
                     >
                         <span class="inline-block relative">
@@ -37,7 +161,7 @@
                     </a>
 
                     <a
-                        href="#services"
+                        href="/#services"
                         class="relative hover:text-brand-blue font-medium text-white group"
                     >
                         <span class="inline-block relative">
@@ -49,7 +173,7 @@
                     </a>
 
                     <a
-                        href="#technology"
+                        href="/#technology"
                         class="relative hover:text-brand-blue font-medium text-white group"
                     >
                         <span class="inline-block relative">
@@ -61,7 +185,7 @@
                     </a>
 
                     <a
-                        href="#portfolio"
+                        href="/#portfolio"
                         class="relative hover:text-brand-blue font-medium text-white group"
                     >
                         <span class="inline-block relative">
@@ -73,7 +197,7 @@
                     </a>
 
                     <a
-                        href="#careers"
+                        href="/#careers"
                         class="relative hover:text-brand-blue font-medium text-white group"
                     >
                         <span class="inline-block relative">
@@ -85,7 +209,7 @@
                     </a>
 
                     <a
-                        href="#new"
+                        href="/#new"
                         class="relative hover:text-brand-blue font-medium text-white group"
                     >
                         <span class="inline-block relative">
@@ -97,7 +221,7 @@
                     </a>
 
                     <a
-                        href="#contact"
+                        href="/#contact"
                         class="relative hover:text-brand-blue font-medium text-white group"
                     >
                         <span class="inline-block relative">
@@ -112,7 +236,7 @@
                         <button
                             class="bg-brand-blue text-white px-5 py-1 rounded"
                         >
-                            Join January 2026 Event
+                            Join 2026 Event
                         </button>
                     </a>
                 </div>
@@ -148,42 +272,42 @@
             class="hidden xl:hidden bg-black border-t border-gray-200 py-3"
         >
             <a
-                href="#home"
+                href="/#home"
                 class="mobile-link block px-4 py-2 text-brand-blue hover:text-gray-100 hover:bg-brand-green"
                 >Home</a
             >
             <a
-                href="#aboutus"
+                href="/#aboutus"
                 class="mobile-link block px-4 py-2 text-brand-blue hover:bg-brand-green"
                 >About</a
             >
             <a
-                href="#services"
+                href="/#services"
                 class="mobile-link block px-4 py-2 text-brand-blue hover:bg-brand-green"
                 >Services</a
             >
             <a
-                href="#technology"
+                href="/#technology"
                 class="mobile-link block px-4 py-2 text-brand-blue hover:bg-brand-green"
                 >Technology</a
             >
             <a
-                href="#portfolio"
+                href="/#portfolio"
                 class="mobile-link block px-4 py-2 text-brand-blue hover:bg-brand-green"
                 >Portfolio</a
             >
             <a
-                href="#careers"
+                href="/#careers"
                 class="mobile-link block px-4 py-2 text-brand-blue hover:bg-brand-green"
                 >Careers</a
             >
             <a
-                href="#new"
+                href="/#new"
                 class="mobile-link block px-4 py-2 text-brand-blue hover:bg-brand-green"
                 >New & Insights</a
             >
             <a
-                href="#contact"
+                href="/#contact"
                 class="mobile-link block px-4 py-2 text-brand-blue hover:bg-brand-green"
                 >Contact Us</a
             >
@@ -192,7 +316,7 @@
                 <button
                     class="bg-brand-blue text-white px-5 py-1 rounded ms-3 mt-3 mb-2"
                 >
-                    Join January 2026 Event
+                    Join 2026 Event
                 </button>
             </a>
         </div>

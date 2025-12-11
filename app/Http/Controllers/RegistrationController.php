@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Models\User;
 use App\Models\DetailUser;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 
 // Load QR library
 if (!class_exists('QRcode')) {
@@ -28,11 +29,11 @@ class RegistrationController extends Controller
     const QR_CODE_PATH = 'qr_image/';
 
     // UPDATED: SUCCESS_URL now points to our new dedicated verification route
-    const SUCCESS_URL = 'https://cincodigitalph.com/payment/verify';
-    const FAILURE_URL = 'https://cincodigitalph.com/payment/failure';
+    // const SUCCESS_URL = 'https://cincodigitalph.com/payment/verify';
+    // const FAILURE_URL = 'https://cincodigitalph.com/payment/failure';
 
-    // const SUCCESS_URL = 'http://cincodigitalph.test/payment/verify';
-    // const FAILURE_URL = 'http://cincodigitalph.test/payment/failure';
+    const SUCCESS_URL = 'http://cinco.test/payment/verify';
+    const FAILURE_URL = 'http://cinco.test/payment/failure';
 
     protected function sendMoviderSms(string $recipient, string $message): void
     {
@@ -128,7 +129,7 @@ class RegistrationController extends Controller
                         'name' => $teamName,
                         'email' => $email,
                     ],
-                    // 🛑 REDUNDANCY FIX: Set to false so only our custom Laravel email sends.
+                    // REDUNDANCY FIX: Set to false so only our custom Laravel email sends.
                     'send_email_receipt' => $sendEmail,
                     'show_description' => true,
                     'show_line_items' => true,
@@ -136,7 +137,7 @@ class RegistrationController extends Controller
                     // Pass the team_id to the new 'verify' route
                     'success_url' => self::SUCCESS_URL . '?team_id=' . $teamId,
                     'line_items' => $items,
-                    'payment_method_types' => ['card', 'gcash', 'paymaya', 'grab_pay'],
+                    'payment_method_types' => ['card', 'paymaya', 'qrph', 'billease', 'grab_pay', 'dob'],
                     'description' => 'Team Registration Payment for ' . $teamName,
                     'statement_descriptor' => 'CINCOREG',
                     'metadata' => [
@@ -333,7 +334,7 @@ class RegistrationController extends Controller
                 'transaction_status' => 'pending_payment',
             ]);
 
-            // 4. QR CODE GENERATION AND DETAILS INSERTION (Keep existing logic)
+            // 4. QR CODE GENERATION AND DETAILS INSERTION (Transaction-safe)
             if (class_exists('QRcode')) {
                 $lastDetail = DetailUser::orderBy('id', 'desc')->lockForUpdate()->first();
                 $lastNumber = 0;
@@ -342,12 +343,11 @@ class RegistrationController extends Controller
                     $lastNumber = (int)$matches[1];
                 }
 
-                $qrCodeDirectory = public_path(self::QR_CODE_PATH);
+                $qrCodeDirectory = resource_path('js/assets/' . self::QR_CODE_PATH);
+
                 if (!is_dir($qrCodeDirectory)) {
                     mkdir($qrCodeDirectory, 0755, true);
                 }
-
-                $detailsToInsert = [];
 
                 foreach ($detailUsers as $detail) {
                     $lastNumber++;
@@ -357,9 +357,8 @@ class RegistrationController extends Controller
                     $qrImg = $qrPlain . '.png';
                     $qrHashed = Hash::make($qrPlain);
 
-                    \QRcode::png($qrHashed, $qrCodeDirectory . $qrImg, QR_ECLEVEL_L, 10, 2);
-
-                    $detailsToInsert[] = [
+                    // Insert first, then generate QR code
+                    $insertedDetail = DetailUser::create([
                         'user_id' => $user->id,
                         'full_name' => $detail['fullName'],
                         'email' => $detail['email'],
@@ -367,13 +366,18 @@ class RegistrationController extends Controller
                         'account_type' => $detail['accountType'],
                         'qrcode_name' => $qrHashed,
                         'qrcode_img' => $qrImg,
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ];
-                }
+                    ]);
 
-                DetailUser::insert($detailsToInsert);
+                    if ($insertedDetail) {
+                        // Generate QR code only after successful DB insertion
+                        \QRcode::png($qrHashed, $qrCodeDirectory . $qrImg, QR_ECLEVEL_L, 10, 2);
+                    } else {
+                        // If insert fails, throw exception to rollback transaction
+                        throw new \Exception("Failed to insert DetailUser record for {$detail['fullName']}");
+                    }
+                }
             }
+
 
             // 5. COMMIT TRANSACTION
             DB::commit();
@@ -455,8 +459,11 @@ class RegistrationController extends Controller
                 // Get current date for the email
                 $currentDate = Carbon::now()->format('F d, Y');
 
+                $playerDetails = $allDetails->where('account_type', 'Player');
+                $shirtDetails = $allDetails->where('account_type', 'Shirt');
+
                 // Prepare the designed HTML email content
-                $htmlBody = $this->createConfirmationEmailBody($user->team_name, $currentDate);
+                $htmlBody = $this->createConfirmationEmailBody($user->team_name, $currentDate, $playerDetails, $shirtDetails);
 
                 // --- SMS De-duplication and Content Logic ---
                 $sentNumbers = [];
@@ -562,8 +569,42 @@ class RegistrationController extends Controller
      * Generates a simple, designed HTML body for the confirmation email.
      * This is a basic inline CSS design for maximum compatibility.
      */
-    protected function createConfirmationEmailBody(string $teamName, string $date): string
+    protected function createConfirmationEmailBody(string $teamName, string $date, Collection $playerDetails, Collection $shirtDetails): string
     {
+
+        // Generate list items for players
+        $playerListHtml = '';
+        if ($playerDetails->isNotEmpty()) {
+            foreach ($playerDetails as $index => $detail) {
+                $playerListHtml .= '<li>' . ($index + 1) . '. ' . htmlspecialchars($detail->full_name) . '</li>';
+            }
+        } else {
+            $playerListHtml = '<li>No players registered (Team only registered for shirts).</li>';
+        }
+
+        // Generate list items for additional shirts
+        $shirtListHtml = '';
+        if ($shirtDetails->isNotEmpty()) {
+            foreach ($shirtDetails as $index => $detail) {
+                // Numbering starts from 1
+                $shirtListHtml .= '<li>' . ($index + 1) . '. ' . htmlspecialchars($detail->full_name) . '</li>';
+            }
+        }
+
+        // Determine if the additional shirt row should be visible
+        $additionalShirtRow = '';
+        if ($shirtDetails->isNotEmpty()) {
+            $additionalShirtRow = '
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #ddd; background-color: #f9f9f9;"><strong>Additional Shirt:</strong></td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">
+                        <ul style="display: grid; gap: 5px; list-style-type: none; list-style-position: inside; margin: 0;">
+                            ' . $shirtListHtml . '
+                        </ul>
+                    </td>
+                </tr>';
+        }
+
         return '<div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
             <h2 style="color: #4CAF50; text-align: center;">Congratulations! Registration Confirmed!</h2>
             <hr style="border: 0; border-top: 2px solid #eee;">
@@ -585,6 +626,18 @@ class RegistrationController extends Controller
                     <td style="padding: 10px; border: 1px solid #ddd; background-color: #f9f9f9;"><strong>Status:</strong></td>
                     <td style="padding: 10px; border: 1px solid #ddd;"><strong style="color: #4CAF50;">PAID & CONFIRMED</strong></td>
                 </tr>
+
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #ddd; background-color: #f9f9f9;"><strong>Team Players:</strong></td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">
+                        <ul style="display: grid; gap: 5px; list-style-type: none; list-style-position: inside; margin: 0;">
+                            ' . $playerListHtml . '
+                        </ul>
+                    </td>
+                </tr>
+
+                ' . $additionalShirtRow . '
+
             </table>
 
             <p style="background-color: #e6f7ff; padding: 15px; border-left: 5px solid #007bff; margin: 25px 0;">

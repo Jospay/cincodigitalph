@@ -14,7 +14,7 @@
 
                 <div class="lg:col-span-6 col-span-12 lg:px-10">
                     <h3 class="font-bold text-white text-xl">Quick Links</h3>
-                    <div class="grid grid-cols-12">
+                    <div class="grid grid-cols-12 gap-4">
                         <div class="col-span-4">
                             <a
                                 href="#"
@@ -57,7 +57,7 @@
                             >
                         </div>
 
-                        <div class="col-span-4">
+                        <div class="sm:col-span-4 col-span-12">
                             <a
                                 href="#new"
                                 class="relative text-lg text-white hover:text-brand-yellow transition duration-300 ease-in-out after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-brand-yellow after:transition-all after:duration-300 hover:after:w-full"
@@ -68,6 +68,12 @@
                                 href="#contact"
                                 class="relative text-lg text-white hover:text-brand-yellow transition duration-300 ease-in-out after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-brand-yellow after:transition-all after:duration-300 hover:after:w-full"
                                 >Contact Us</a
+                            >
+                            <br />
+                            <a
+                                href="/privacy-policy"
+                                class="relative text-lg text-white hover:text-brand-yellow transition duration-300 ease-in-out after:content-[''] after:absolute after:left-0 after:bottom-0 after:w-0 after:h-[2px] after:bg-brand-yellow after:transition-all after:duration-300 hover:after:w-full"
+                                >Privacy Policy</a
                             >
                         </div>
                     </div>
@@ -101,22 +107,23 @@
     </div>
     <!-- Start Footer -->
     <div
-        class="w-full bg-brand-blue md:text-md text-white py-2 text-lg flex justify-evenly items-center"
+        class="w-full bg-brand-blue text-md text-white py-2 gap-2 flex md:justify-evenly justify-center flex-wrap items-center"
     >
-        <div>
+        <div class="text-center">
             © 2025
-            <a href="./" class="hover:underline"
-                >Cinco Digital Inc. All Rights Reserved.</a
+            <a href="/#" class="hover:underline"
+                ><strong>Cinco Digital Inc.</strong></a
             >
+            All Rights Reserved.
         </div>
-        <div>
+        <div class="text-center">
             Designed & Developed by:
             <a
                 class="hover:underline text-white"
                 href="https://bb88advertising.com/"
                 target="_blank"
             >
-                BB 88 Advertising and Digital Solutions Inc.
+                <strong>BB 88 Advertising and Digital Solutions Inc.</strong>
             </a>
         </div>
     </div>

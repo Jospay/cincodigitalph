@@ -84,18 +84,22 @@ onMounted(() => {
             <!-- Start Explore and join  -->
             <div class="md:flex grid justify-center md:gap-8 gap-4 pt-9">
                 <div>
-                    <button
-                        class="bg-white text-brand-blue md:w-[350px] sm:w-[400px] w-[300px] py-2 font-bold text-2xl rounded-[10px]"
-                    >
-                        Explore Our Services
-                    </button>
+                    <a href="#services">
+                        <button
+                            class="bg-white text-brand-blue md:w-[350px] sm:w-[400px] w-[300px] py-2 font-bold text-2xl rounded-[10px]"
+                        >
+                            Explore Our Services
+                        </button>
+                    </a>
                 </div>
                 <div>
-                    <button
-                        class="text-white bg-brand-blue md:w-[300px] sm:w-[400px] w-[300px] py-2 font-bold text-2xl rounded-[10px]"
-                    >
-                        Join Our Team
-                    </button>
+                    <a href="/join">
+                        <button
+                            class="text-white bg-brand-blue md:w-[300px] sm:w-[400px] w-[300px] py-2 font-bold text-2xl rounded-[10px]"
+                        >
+                            Join Our Team
+                        </button>
+                    </a>
                 </div>
             </div>
             <!-- End Explore and join  -->

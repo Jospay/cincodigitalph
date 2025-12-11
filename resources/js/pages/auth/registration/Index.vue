@@ -1,17 +1,16 @@
 <script setup>
 import { ref, computed, watch, onMounted } from "vue";
 import { useAddress } from "@/composables/useAddress";
+import PrivacyPolicy from "@/components/privacy-policy/privacy-policy.vue";
 import axios from "axios";
-import { usePage } from "@inertiajs/vue3";
 
 // --- CONSTANTS ---
 const SHIRT_PRICE = 500;
 const INITIAL_PLAYER_COUNT = 5;
 const BASE_REGISTRATION_FEE = INITIAL_PLAYER_COUNT * SHIRT_PRICE;
-const LOCAL_STORAGE_KEY = "teamRegistrationDraft"; // Key for Local Storage
+const LOCAL_STORAGE_KEY = "teamRegistrationDraft";
 
 // --- ADDRESS COMPOSABLE ---
-// The address refs are still bound to the template, but their values are NOT restored from LS.
 const {
     regions,
     provinces,
@@ -23,7 +22,7 @@ const {
     selectedBarangay,
 } = useAddress();
 
-// --- FORM STATE VARIABLES (v-model) ---
+// --- FORM STATE VARIABLES ---
 const teamName = ref("");
 const postalCode = ref("");
 const players = ref([]);
@@ -56,28 +55,14 @@ const totalPayment = computed(() => {
     return BASE_REGISTRATION_FEE + additionalShirtCost;
 });
 
-const isNcr = computed(
-    () =>
-        selectedRegion.value &&
-        selectedRegion.value.includes("National Capital Region")
-);
-
 // --- LOCAL STORAGE FUNCTIONS ---
-
-/**
- * Loads data from Local Storage and initializes the form state (EXCLUDING ADDRESS).
- */
 const loadFormState = () => {
     try {
         const storedData = localStorage.getItem(LOCAL_STORAGE_KEY);
         if (storedData) {
             const data = JSON.parse(storedData);
-
-            // Basic Team Info:
             teamName.value = data.teamName || "";
             postalCode.value = data.postalCode || "";
-
-            // Players/Details
             players.value =
                 data.players ||
                 Array.from({ length: INITIAL_PLAYER_COUNT }, () => ({
@@ -89,7 +74,6 @@ const loadFormState = () => {
             additionalShirtCount.value = data.additionalShirtCount || 0;
             availShirtDetails.value = data.availShirtDetails || [];
         } else {
-            // Initialize default players if no data is found
             players.value = Array.from(
                 { length: INITIAL_PLAYER_COUNT },
                 () => ({
@@ -102,7 +86,6 @@ const loadFormState = () => {
         }
     } catch (e) {
         console.error("Error loading state from localStorage:", e);
-        // Fallback to default state initialization
         players.value = Array.from({ length: INITIAL_PLAYER_COUNT }, () => ({
             fullName: "",
             email: "",
@@ -112,18 +95,10 @@ const loadFormState = () => {
     }
 };
 
-/**
- * Saves the current form state to Local Storage (EXCLUDING ADDRESS).
- */
 const saveFormState = () => {
     const dataToSave = {
         teamName: teamName.value,
         postalCode: postalCode.value,
-        // --- ADDRESS FIELDS ARE REMOVED HERE ---
-        // selectedRegion: selectedRegion.value,
-        // selectedProvince: selectedProvince.value,
-        // selectedCity: selectedCity.value,
-        // selectedBarangay: selectedBarangay.value,
         players: players.value,
         additionalShirtCount: additionalShirtCount.value,
         availShirtDetails: availShirtDetails.value,
@@ -135,9 +110,6 @@ const saveFormState = () => {
     }
 };
 
-/**
- * Clears the saved draft from Local Storage.
- */
 const clearFormState = () => {
     try {
         localStorage.removeItem(LOCAL_STORAGE_KEY);
@@ -148,27 +120,60 @@ const clearFormState = () => {
 
 // --- LIFE CYCLE HOOKS ---
 onMounted(() => {
-    // 1. Load data from Local Storage when the component mounts
     loadFormState();
 });
 
-// 2. Watch variables and save to Local Storage on change
 watch(
-    [
-        teamName,
-        postalCode,
-        // --- ADDRESS FIELDS ARE REMOVED FROM THE WATCHER ---
-        // selectedRegion,
-        // selectedProvince,
-        // selectedCity,
-        // selectedBarangay,
-        players,
-        additionalShirtCount,
-        availShirtDetails,
-    ],
-    saveFormState,
-    { deep: true } // Use deep watch for arrays and objects (players, details)
+    [teamName, postalCode, players, additionalShirtCount, availShirtDetails],
+    () => {
+        saveFormState(); // Save current state to localStorage
+        if (submitError.value) submitError.value = null; // Clear submit error dynamically
+    },
+    { deep: true }
 );
+
+// --- DUPLICATE CHECK FUNCTIONS ---
+const allUsers = computed(() => [...players.value, ...availShirtDetails.value]);
+
+const duplicateEmails = computed(() => {
+    const emails = allUsers.value.map((u) => u.email.trim().toLowerCase());
+    return emails.filter((email, i) => emails.indexOf(email) !== i);
+});
+
+const duplicateMobiles = computed(() => {
+    const mobiles = allUsers.value.map((u) => String(u.mobileNumber).trim());
+    return mobiles.filter((num, i) => mobiles.indexOf(num) !== i);
+});
+
+const isDuplicateEmail = (email) =>
+    duplicateEmails.value.includes(email?.trim().toLowerCase());
+const isDuplicateMobile = (num) =>
+    duplicateMobiles.value.includes(String(num).trim());
+
+// --- CLEAR SERVER ERROR ON INPUT ---
+const handleInput = (fieldName) => {
+    if (validationErrors.value[fieldName]) {
+        delete validationErrors.value[fieldName];
+    }
+};
+
+// --- GET ERROR FUNCTION ---
+const getError = (fieldName, value = null, type = null) => {
+    // server validation error
+    if (validationErrors.value[fieldName]) {
+        return validationErrors.value[fieldName][0];
+    }
+
+    // live duplicate detection (only if value is not empty)
+    if (type === "email" && value && isDuplicateEmail(value)) {
+        return "Duplicate email detected";
+    }
+    if (type === "mobile" && value && isDuplicateMobile(value)) {
+        return "Duplicate mobile number detected";
+    }
+
+    return null;
+};
 
 // --- METHODS ---
 const incrementShirt = () => {
@@ -182,73 +187,58 @@ const decrementShirt = () => {
     }
 };
 
-const getError = (fieldName) => {
-    return validationErrors.value[fieldName]
-        ? validationErrors.value[fieldName][0]
-        : null;
-};
+const isProcessingPayment = ref(false);
 
-// Function to handle form submission
+// --- FORM SUBMISSION ---
 const registerTeam = async () => {
     isSubmitting.value = true;
     submitMessage.value = "";
     submitError.value = null;
-    validationErrors.value = {}; // Clear previous errors
+    validationErrors.value = {};
+    isProcessingPayment.value = false;
 
-    // 1. Combine all detail users (Players and Shirts)
-    const allDetailUsers = [...players.value, ...availShirtDetails.value];
-
-    // 2. Sanitize the details array to ensure mobileNumber is a string
-    const sanitizedDetailUsers = allDetailUsers.map((detail) => ({
-        ...detail,
-        mobileNumber: String(detail.mobileNumber),
+    // Combine and sanitize
+    const allDetailUsers = allUsers.value.map((u) => ({
+        ...u,
+        mobileNumber: String(u.mobileNumber),
     }));
 
-    // 3. Aggregate all data into the required payload structure
     const payload = {
         team: {
             team_name: teamName.value,
             total_payment: totalPayment.value,
             additional_shirt_count: additionalShirtCount.value,
             country: "Philippines",
-            // The currently selected values are taken here, which will be empty on refresh
-            // unless the user manually selected them.
             region: selectedRegion.value,
             province: selectedProvince.value,
             city: selectedCity.value,
             barangay: selectedBarangay.value,
             postal_code: postalCode.value,
         },
-        details: sanitizedDetailUsers, // Use the sanitized array
+        details: allDetailUsers,
     };
 
-    // 4. Send data to Laravel backend
     try {
         const response = await axios.post("/api/register", payload);
-
-        // *** CRITICAL STEP: CLEAR LOCAL STORAGE ON SUCCESS ***
         clearFormState();
-
-        // --- Payment Redirection ---
         const checkoutUrl = response.data.checkout_url;
-
         if (checkoutUrl) {
             submitMessage.value =
                 "Registration successful! Redirecting to PayMongo for payment...";
-
-            window.location.href = checkoutUrl;
+            isProcessingPayment.value = true; // 💡 change button text
+            // optional delay to show message before redirect
+            setTimeout(() => {
+                window.location.href = checkoutUrl;
+            }, 1500);
         } else {
             submitMessage.value =
                 "Registration successful, but payment URL was not received.";
         }
     } catch (error) {
         if (error.response && error.response.status === 422) {
-            // Handle validation errors from Laravel
             validationErrors.value = error.response.data.errors;
-
             submitError.value = "Please check the form for highlighted errors.";
         } else if (error.response && error.response.data.message) {
-            // Handle internal server or PayMongo API errors
             submitError.value = error.response.data.message;
         } else {
             submitError.value = `An unknown error occurred: ${error.message}`;
@@ -258,6 +248,37 @@ const registerTeam = async () => {
         isSubmitting.value = false;
     }
 };
+
+// for privicy policy
+const showPrivacy = ref(false);
+const canAgree = ref(false);
+const agreeChecked = ref(false);
+
+const policyBody = ref(null);
+
+// Open modal
+function openModal() {
+    showPrivacy.value = true;
+    canAgree.value = false;
+}
+
+// When user scrolls the modal body
+function handleScroll() {
+    const el = policyBody.value;
+    if (!el) return;
+
+    const bottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 10;
+
+    if (bottom) {
+        canAgree.value = true; // reveal Agree button
+    }
+}
+
+// When user clicks Agree
+function acceptPolicy() {
+    agreeChecked.value = true;
+    showPrivacy.value = false;
+}
 </script>
 
 <template>
@@ -287,7 +308,7 @@ const registerTeam = async () => {
             </div>
 
             <div class="text-[#DCDBE0] flex gap-5 mt-7 text-lg">
-                <a href="/">HOME</a>
+                <a href="/join">BACK</a>
                 <div>|</div>
                 <a href="">MORE INFO</a>
             </div>
@@ -565,18 +586,32 @@ const registerTeam = async () => {
                                     :name="'playerName' + index"
                                     placeholder="Full Name"
                                     required
+                                    @input="
+                                        handleInput(`details.${index}.fullName`)
+                                    "
                                     class="bg-[rgba(0,0,0,0.7)] text-white w-full p-2 mt-1 rounded-md outline-none ring-2 ring-[#bf38a6]"
                                     :class="{
                                         'ring-red-500': getError(
-                                            `details.${index}.fullName`
+                                            `details.${index}.fullName`,
+                                            p.fullName
                                         ),
                                     }"
                                 />
                                 <p
-                                    v-if="getError(`details.${index}.fullName`)"
+                                    v-if="
+                                        getError(
+                                            `details.${index}.fullName`,
+                                            p.fullName
+                                        )
+                                    "
                                     class="text-red-500 text-xs pt-1"
                                 >
-                                    {{ getError(`details.${index}.fullName`) }}
+                                    {{
+                                        getError(
+                                            `details.${index}.fullName`,
+                                            p.fullName
+                                        )
+                                    }}
                                 </p>
                             </div>
 
@@ -590,18 +625,35 @@ const registerTeam = async () => {
                                     :name="'playerEmail' + index"
                                     placeholder="E-mail"
                                     required
+                                    @input="
+                                        handleInput(`details.${index}.email`)
+                                    "
                                     class="bg-[rgba(0,0,0,0.7)] text-white w-full p-2 mt-1 rounded-md outline-none ring-2 ring-[#bf38a6]"
                                     :class="{
                                         'ring-red-500': getError(
-                                            `details.${index}.email`
+                                            `details.${index}.email`,
+                                            p.email,
+                                            'email'
                                         ),
                                     }"
                                 />
                                 <p
-                                    v-if="getError(`details.${index}.email`)"
+                                    v-if="
+                                        getError(
+                                            `details.${index}.email`,
+                                            p.email,
+                                            'email'
+                                        )
+                                    "
                                     class="text-red-500 text-xs pt-1"
                                 >
-                                    {{ getError(`details.${index}.email`) }}
+                                    {{
+                                        getError(
+                                            `details.${index}.email`,
+                                            p.email,
+                                            "email"
+                                        )
+                                    }}
                                 </p>
                             </div>
 
@@ -615,24 +667,35 @@ const registerTeam = async () => {
                                     :name="'playerNumber' + index"
                                     placeholder="Mobile Number"
                                     required
+                                    @input="
+                                        handleInput(
+                                            `details.${index}.mobileNumber`
+                                        )
+                                    "
                                     class="bg-[rgba(0,0,0,0.7)] text-white w-full p-2 mt-1 rounded-md outline-none ring-2 ring-[#bf38a6]"
                                     :class="{
                                         'ring-red-500': getError(
-                                            `details.${index}.mobileNumber`
+                                            `details.${index}.mobileNumber`,
+                                            p.mobileNumber,
+                                            'mobile'
                                         ),
                                     }"
                                 />
                                 <p
                                     v-if="
                                         getError(
-                                            `details.${index}.mobileNumber`
+                                            `details.${index}.mobileNumber`,
+                                            p.mobileNumber,
+                                            'mobile'
                                         )
                                     "
                                     class="text-red-500 text-xs pt-1"
                                 >
                                     {{
                                         getError(
-                                            `details.${index}.mobileNumber`
+                                            `details.${index}.mobileNumber`,
+                                            p.mobileNumber,
+                                            "mobile"
                                         )
                                     }}
                                 </p>
@@ -665,12 +728,20 @@ const registerTeam = async () => {
                                         :name="'availName' + index"
                                         placeholder="Full Name"
                                         required
+                                        @input="
+                                            handleInput(
+                                                `details.${
+                                                    INITIAL_PLAYER_COUNT + index
+                                                }.fullName`
+                                            )
+                                        "
                                         class="bg-[rgba(0,0,0,0.7)] text-white w-full p-2 mt-1 rounded-md outline-none ring-2 ring-[#bf38a6]"
                                         :class="{
                                             'ring-red-500': getError(
                                                 `details.${
                                                     INITIAL_PLAYER_COUNT + index
-                                                }.fullName`
+                                                }.fullName`,
+                                                s.fullName
                                             ),
                                         }"
                                     />
@@ -679,7 +750,8 @@ const registerTeam = async () => {
                                             getError(
                                                 `details.${
                                                     INITIAL_PLAYER_COUNT + index
-                                                }.fullName`
+                                                }.fullName`,
+                                                s.fullName
                                             )
                                         "
                                         class="text-red-500 text-xs pt-1"
@@ -688,7 +760,8 @@ const registerTeam = async () => {
                                             getError(
                                                 `details.${
                                                     INITIAL_PLAYER_COUNT + index
-                                                }.fullName`
+                                                }.fullName`,
+                                                s.fullName
                                             )
                                         }}
                                     </p>
@@ -704,12 +777,21 @@ const registerTeam = async () => {
                                         :name="'availEmail' + index"
                                         placeholder="E-mail"
                                         required
+                                        @input="
+                                            handleInput(
+                                                `details.${
+                                                    INITIAL_PLAYER_COUNT + index
+                                                }.email`
+                                            )
+                                        "
                                         class="bg-[rgba(0,0,0,0.7)] text-white w-full p-2 mt-1 rounded-md outline-none ring-2 ring-[#bf38a6]"
                                         :class="{
                                             'ring-red-500': getError(
                                                 `details.${
                                                     INITIAL_PLAYER_COUNT + index
-                                                }.email`
+                                                }.email`,
+                                                s.email,
+                                                'email'
                                             ),
                                         }"
                                     />
@@ -718,7 +800,9 @@ const registerTeam = async () => {
                                             getError(
                                                 `details.${
                                                     INITIAL_PLAYER_COUNT + index
-                                                }.email`
+                                                }.email`,
+                                                s.email,
+                                                'email'
                                             )
                                         "
                                         class="text-red-500 text-xs pt-1"
@@ -727,7 +811,9 @@ const registerTeam = async () => {
                                             getError(
                                                 `details.${
                                                     INITIAL_PLAYER_COUNT + index
-                                                }.email`
+                                                }.email`,
+                                                s.email,
+                                                "email"
                                             )
                                         }}
                                     </p>
@@ -745,12 +831,21 @@ const registerTeam = async () => {
                                         :name="'availNumber' + index"
                                         placeholder="Mobile Number"
                                         required
+                                        @input="
+                                            handleInput(
+                                                `details.${
+                                                    INITIAL_PLAYER_COUNT + index
+                                                }.mobileNumber`
+                                            )
+                                        "
                                         class="bg-[rgba(0,0,0,0.7)] text-white w-full p-2 mt-1 rounded-md outline-none ring-2 ring-[#bf38a6]"
                                         :class="{
                                             'ring-red-500': getError(
                                                 `details.${
                                                     INITIAL_PLAYER_COUNT + index
-                                                }.mobileNumber`
+                                                }.mobileNumber`,
+                                                s.mobileNumber,
+                                                'mobile'
                                             ),
                                         }"
                                     />
@@ -759,7 +854,9 @@ const registerTeam = async () => {
                                             getError(
                                                 `details.${
                                                     INITIAL_PLAYER_COUNT + index
-                                                }.mobileNumber`
+                                                }.mobileNumber`,
+                                                s.mobileNumber,
+                                                'mobile'
                                             )
                                         "
                                         class="text-red-500 text-xs pt-1"
@@ -768,7 +865,9 @@ const registerTeam = async () => {
                                             getError(
                                                 `details.${
                                                     INITIAL_PLAYER_COUNT + index
-                                                }.mobileNumber`
+                                                }.mobileNumber`,
+                                                s.mobileNumber,
+                                                "mobile"
                                             )
                                         }}
                                     </p>
@@ -776,6 +875,66 @@ const registerTeam = async () => {
                             </template>
                         </div>
                     </template>
+
+                    <!-- =============== PRIVACY CHECKBOX =============== -->
+                    <div class="flex items-center gap-3 pt-5">
+                        <input
+                            id="agree"
+                            type="checkbox"
+                            v-model="agreeChecked"
+                            class="mt-1 h-4 w-4 text-brand focus:ring-brand border-gray-300 rounded"
+                            required
+                        />
+
+                        <label for="agree" class="text-sm text-white">
+                            I agree to the
+                            <a
+                                href="#"
+                                class="text-brand-green font-bold hover:underline"
+                                @click.prevent="openModal"
+                            >
+                                Privacy Policy
+                            </a>
+                        </label>
+                    </div>
+
+                    <!-- =============== PRIVACY POLICY MODAL =============== -->
+                    <div
+                        v-if="showPrivacy"
+                        class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+                    >
+                        <div
+                            class="bg-[url('@/assets/nbg3.jpg')] border-4 border-brand-blue bg-cover bg-no-repeat rounded-xl w-dull max-w-2xl shadow-xl overflow-hidden"
+                        >
+                            <!-- Scrollable Content -->
+                            <div
+                                ref="policyBody"
+                                @scroll="handleScroll"
+                                class="py-6 max-h-[60vh] overflow-y-auto text-gray-700 space-y-4 text-sm"
+                            >
+                                <PrivacyPolicy />
+                            </div>
+
+                            <!-- Modal Footer -->
+                            <div class="p-4 border-t flex justify-end gap-3">
+                                <button
+                                    class="px-4 py-2 rounded-md bg-gray-300"
+                                    @click="showPrivacy = false"
+                                >
+                                    Close
+                                </button>
+
+                                <!-- Agree button becomes visible only after scrolling -->
+                                <button
+                                    v-if="canAgree"
+                                    class="px-4 py-2 rounded-md bg-green-600 text-white"
+                                    @click="acceptPolicy"
+                                >
+                                    Agree
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
                     <div
                         class="xl:flex grid xl:justify-between justify-center items-center mt-4"
@@ -847,12 +1006,16 @@ const registerTeam = async () => {
                                 <div class="sm:col-span-2 col-span-6">
                                     <button
                                         type="submit"
-                                        :disabled="isSubmitting"
+                                        :disabled="
+                                            isSubmitting || isProcessingPayment
+                                        "
                                         class="sm:py-[3px] py-[5px] sm:mt-[23px] mt-4 w-full text-2xl bg-green-register text-white rounded-md border-2 border-white disabled:opacity-50"
                                     >
                                         {{
                                             isSubmitting
                                                 ? "Submitting..."
+                                                : isProcessingPayment
+                                                ? "Processing..."
                                                 : "Pay Now"
                                         }}
                                     </button>

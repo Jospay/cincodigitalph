@@ -32,8 +32,8 @@
             </h1>
 
             <img
-                src="@/assets/moba1.jpg"
-                class="md:rounded-3xl rounded-xl mt-7"
+                src="@/assets/join.jpg"
+                class="md:rounded-2xl rounded-xl mt-7"
                 alt=""
             />
 
@@ -41,7 +41,7 @@
                 <a href="/register">
                     <img
                         src="@/assets/reg-button1.png"
-                        class="w-[500px]"
+                        class="w-[500px] transition-transform duration-300 hover:scale-105"
                         alt=""
                     />
                 </a>

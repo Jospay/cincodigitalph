@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, nextTick } from "vue";
+// import { onMounted, nextTick } from "vue";
 import Aboutus from "@/components/landing/Aboutus.vue";
 import Banner from "@/components/landing/Banner.vue";
 import Careers from "@/components/landing/Careers.vue";
@@ -11,109 +11,114 @@ import Portfolio from "@/components/landing/Portfolio.vue";
 import Services from "@/components/landing/Services.vue";
 import Technology from "@/components/landing/Technology.vue";
 
-onMounted(() => {
-    nextTick(() => {
-        const sections = document.querySelectorAll("div[id]");
-        const mobileLinks = document.querySelectorAll(".mobile-link");
-        const navLinks = document.querySelectorAll(".xl\\:flex a");
-        const menuBtn = document.getElementById("menu-btn");
-        const mobileMenu = document.getElementById("mobile-menu");
-        const navbar = document.getElementById("navbar");
-        const scrollThreshold = 50;
+// onMounted(() => {
+//     nextTick(() => {
+//         const sections = document.querySelectorAll("div[id]");
+//         const mobileLinks = document.querySelectorAll(".mobile-link");
+//         const navLinks = document.querySelectorAll(".xl\\:flex a");
+//         const menuBtn = document.getElementById("menu-btn");
+//         const mobileMenu = document.getElementById("mobile-menu");
+//         const navbar = document.getElementById("navbar");
+//         const scrollThreshold = 50;
 
-        // -------------------- NAVBAR BG ON SCROLL --------------------
-        function toggleNavbarBackground() {
-            if (window.scrollY > scrollThreshold) {
-                navbar.classList.add("bg-black");
-                navbar.classList.remove("text-white");
-            } else {
-                navbar.classList.remove("bg-black");
-                navbar.classList.add("text-white");
-            }
-        }
+//         // -------------------- NAVBAR BG ON SCROLL --------------------
+//         function toggleNavbarBackground() {
+//             if (window.scrollY > scrollThreshold) {
+//                 navbar.classList.add("bg-black");
+//                 navbar.classList.remove("text-white");
+//             } else {
+//                 navbar.classList.remove("bg-black");
+//                 navbar.classList.add("text-white");
+//             }
+//         }
 
-        window.addEventListener("scroll", toggleNavbarBackground);
-        toggleNavbarBackground();
+//         window.addEventListener("scroll", toggleNavbarBackground);
+//         toggleNavbarBackground();
 
-        // -------------------- MOBILE NAV LINK --------------------
-        function activateMobileLink() {
-            let scrollY = window.scrollY + 150;
-            let currentId = "";
+//         // Utility function to clean href into an ID
+//         function extractId(href) {
+//             return href.replace("/", "").replace("#", "");
+//         }
 
-            sections.forEach((section) => {
-                const top = section.offsetTop;
-                const height = section.offsetHeight;
-                if (scrollY >= top && scrollY < top + height) {
-                    currentId = section.getAttribute("id");
-                }
-            });
+//         // -------------------- MOBILE NAV LINK --------------------
+//         function activateMobileLink() {
+//             let scrollY = window.scrollY + 150;
+//             let currentId = "";
 
-            mobileLinks.forEach((link) => {
-                const href = link.getAttribute("href").substring(1);
-                link.classList.remove("active");
-                if (href === currentId) link.classList.add("active");
-            });
-        }
+//             sections.forEach((section) => {
+//                 const top = section.offsetTop;
+//                 const height = section.offsetHeight;
+//                 if (scrollY >= top && scrollY < top + height) {
+//                     currentId = section.getAttribute("id");
+//                 }
+//             });
 
-        mobileLinks.forEach((link) => {
-            link.addEventListener("click", function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute("href").substring(1);
-                const target = document.getElementById(targetId);
+//             mobileLinks.forEach((link) => {
+//                 const href = extractId(link.getAttribute("href"));
+//                 link.classList.remove("active");
+//                 if (href === currentId) link.classList.add("active");
+//             });
+//         }
 
-                if (target) {
-                    window.scrollTo({
-                        top: target.offsetTop - 70,
-                        behavior: "smooth",
-                    });
-                }
+//         mobileLinks.forEach((link) => {
+//             link.addEventListener("click", function (e) {
+//                 e.preventDefault();
 
-                // Hide mobile menu after click
-                mobileMenu.classList.add("hidden");
-            });
-        });
+//                 const targetId = extractId(this.getAttribute("href"));
+//                 const target = document.getElementById(targetId);
 
-        window.addEventListener("scroll", activateMobileLink);
-        activateMobileLink();
+//                 if (target) {
+//                     window.scrollTo({
+//                         top: target.offsetTop - 70,
+//                         behavior: "smooth",
+//                     });
+//                 }
 
-        // -------------------- DESKTOP NAV LINK --------------------
-        function activateLink() {
-            let scrollY = window.scrollY + 150;
-            let currentId = "";
+//                 mobileMenu.classList.add("hidden");
+//             });
+//         });
 
-            sections.forEach((section) => {
-                const top = section.offsetTop;
-                const height = section.offsetHeight;
-                if (scrollY >= top && scrollY < top + height) {
-                    currentId = section.getAttribute("id");
-                }
-            });
+//         window.addEventListener("scroll", activateMobileLink);
+//         activateMobileLink();
 
-            navLinks.forEach((link) => {
-                const underline = link.querySelector("span span");
-                const href = link.getAttribute("href").substring(1);
+//         // -------------------- DESKTOP NAV LINK --------------------
+//         function activateLink() {
+//             let scrollY = window.scrollY + 150;
+//             let currentId = "";
 
-                link.classList.remove("text-brand-blue");
-                link.classList.add("text-white");
-                underline?.classList.remove("w-full");
+//             sections.forEach((section) => {
+//                 const top = section.offsetTop;
+//                 const height = section.offsetHeight;
+//                 if (scrollY >= top && scrollY < top + height) {
+//                     currentId = section.getAttribute("id");
+//                 }
+//             });
 
-                if (href === currentId) {
-                    link.classList.add("text-brand-blue");
-                    link.classList.remove("text-white");
-                    underline?.classList.add("w-full");
-                }
-            });
-        }
+//             navLinks.forEach((link) => {
+//                 const underline = link.querySelector("span span");
+//                 const href = extractId(link.getAttribute("href"));
 
-        window.addEventListener("scroll", activateLink);
-        activateLink();
+//                 link.classList.remove("text-brand-blue");
+//                 link.classList.add("text-white");
+//                 underline?.classList.remove("w-full");
 
-        // -------------------- MOBILE MENU TOGGLE --------------------
-        menuBtn?.addEventListener("click", () => {
-            mobileMenu.classList.toggle("hidden");
-        });
-    });
-});
+//                 if (href === currentId) {
+//                     link.classList.add("text-brand-blue");
+//                     link.classList.remove("text-white");
+//                     underline?.classList.add("w-full");
+//                 }
+//             });
+//         }
+
+//         window.addEventListener("scroll", activateLink);
+//         activateLink();
+
+//         // -------------------- MOBILE MENU TOGGLE --------------------
+//         menuBtn?.addEventListener("click", () => {
+//             mobileMenu.classList.toggle("hidden");
+//         });
+//     });
+// });
 </script>
 
 <template>
