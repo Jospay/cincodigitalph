@@ -72,7 +72,7 @@
                     <div
                         class="xl:block hidden h-[35px] w-[35px] bg-brand-green absolute top-1/2 start-[-15px] -translate-y-1/2 rounded-full grid place-items-center border-3 border-white shadow"
                     >
-                        <div class="pt-[3px]">
+                        <div class="pt-[6px]">
                             <i class="fa-solid fa-check text-white"></i>
                         </div>
                     </div>
@@ -97,7 +97,7 @@
                     <div
                         class="xl:block hidden h-[35px] w-[35px] bg-brand-green absolute top-1/2 start-[-15px] -translate-y-1/2 rounded-full grid place-items-center border-3 border-white shadow"
                     >
-                        <div class="pt-[3px]">
+                        <div class="pt-[6px]">
                             <i class="fa-solid fa-check text-white"></i>
                         </div>
                     </div>
@@ -121,7 +121,7 @@
                     <div
                         class="xl:block hidden h-[35px] w-[35px] bg-brand-green absolute top-1/2 start-[-15px] -translate-y-1/2 rounded-full grid place-items-center border-3 border-white shadow"
                     >
-                        <div class="pt-[3px]">
+                        <div class="pt-[6px]">
                             <i class="fa-solid fa-check text-white"></i>
                         </div>
                     </div>
@@ -145,7 +145,7 @@
                     <div
                         class="xl:block hidden h-[35px] w-[35px] bg-brand-green absolute top-1/2 start-[-15px] -translate-y-1/2 rounded-full grid place-items-center border-3 border-white shadow"
                     >
-                        <div class="pt-[3px]">
+                        <div class="pt-[6px]">
                             <i class="fa-solid fa-check text-white"></i>
                         </div>
                     </div>
@@ -169,7 +169,7 @@
                     <div
                         class="xl:block hidden h-[35px] w-[35px] bg-brand-green absolute top-1/2 start-[-15px] -translate-y-1/2 rounded-full grid place-items-center border-3 border-white shadow"
                     >
-                        <div class="pt-[3px]">
+                        <div class="pt-[6px]">
                             <i class="fa-solid fa-check text-white"></i>
                         </div>
                     </div>

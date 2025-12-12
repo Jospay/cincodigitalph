@@ -7,7 +7,8 @@ import Contact from "@/components/landing/Contact.vue";
 import Footer from "@/components/landing/Footer.vue";
 import Goal from "@/components/landing/Goal.vue";
 import New from "@/components/landing/New.vue";
-import Portfolio from "@/components/landing/Portfolio.vue";
+// import Portfolio from "@/components/landing/Portfolio.vue";
+import Events from "@/components/landing/Events.vue";
 import Services from "@/components/landing/Services.vue";
 import Technology from "@/components/landing/Technology.vue";
 
@@ -143,7 +144,7 @@ import Technology from "@/components/landing/Technology.vue";
     <!-- End Goal -->
 
     <!-- Start Portfolio -->
-    <Portfolio />
+    <Events />
     <!-- End Portfolio -->
 
     <!-- Start Careers -->

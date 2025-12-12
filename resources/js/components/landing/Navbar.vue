@@ -130,7 +130,7 @@ onMounted(() => {
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
                 <!-- Logo -->
-                <div class="flex-shrink-0">
+                <div class="shrink-0">
                     <img src="@/assets/nav logo.png" class="h-10" alt="" />
                 </div>
 
@@ -143,7 +143,7 @@ onMounted(() => {
                         <span class="inline-block relative">
                             Home
                             <span
-                                class="absolute bottom-[-2px] left-0 w-0 h-[2px] bg-brand-blue transition-all duration-300 group-hover:w-full"
+                                class="absolute bottom-0.5 left-0 w-0 h-0.5 bg-brand-blue transition-all duration-300 group-hover:w-full"
                             ></span>
                         </span>
                     </a>
@@ -155,7 +155,7 @@ onMounted(() => {
                         <span class="inline-block relative">
                             About Us
                             <span
-                                class="absolute bottom-[-2px] left-0 w-0 h-[2px] bg-brand-blue transition-all duration-300 group-hover:w-full"
+                                class="absolute bottom-0.5 left-0 w-0 h-0.5 bg-brand-blue transition-all duration-300 group-hover:w-full"
                             ></span>
                         </span>
                     </a>
@@ -167,7 +167,7 @@ onMounted(() => {
                         <span class="inline-block relative">
                             Services
                             <span
-                                class="absolute bottom-[-2px] left-0 w-0 h-[2px] bg-brand-blue transition-all duration-300 group-hover:w-full"
+                                class="absolute bottom-0.5 left-0 w-0 h-0.5 bg-brand-blue transition-all duration-300 group-hover:w-full"
                             ></span>
                         </span>
                     </a>
@@ -179,19 +179,31 @@ onMounted(() => {
                         <span class="inline-block relative">
                             Technology
                             <span
-                                class="absolute bottom-[-2px] left-0 w-0 h-[2px] bg-brand-blue transition-all duration-300 group-hover:w-full"
+                                class="absolute bottom-0.5 left-0 w-0 h-0.5 bg-brand-blue transition-all duration-300 group-hover:w-full"
                             ></span>
                         </span>
                     </a>
 
-                    <a
+                    <!-- <a
                         href="/#portfolio"
                         class="relative hover:text-brand-blue font-medium text-white group"
                     >
                         <span class="inline-block relative">
                             Portfolio
                             <span
-                                class="absolute bottom-[-2px] left-0 w-0 h-[2px] bg-brand-blue transition-all duration-300 group-hover:w-full"
+                                class="absolute bottom-0.5 left-0 w-0 h-0.5 bg-brand-blue transition-all duration-300 group-hover:w-full"
+                            ></span>
+                        </span>
+                    </a> -->
+
+                    <a
+                        href="/#events"
+                        class="relative hover:text-brand-blue font-medium text-white group"
+                    >
+                        <span class="inline-block relative">
+                            2026 Events
+                            <span
+                                class="absolute bottom-0.5 left-0 w-0 h-0.5 bg-brand-blue transition-all duration-300 group-hover:w-full"
                             ></span>
                         </span>
                     </a>
@@ -203,7 +215,7 @@ onMounted(() => {
                         <span class="inline-block relative">
                             Careers
                             <span
-                                class="absolute bottom-[-2px] left-0 w-0 h-[2px] bg-brand-blue transition-all duration-300 group-hover:w-full"
+                                class="absolute bottom-0.5 left-0 w-0 h-0.5 bg-brand-blue transition-all duration-300 group-hover:w-full"
                             ></span>
                         </span>
                     </a>
@@ -215,7 +227,7 @@ onMounted(() => {
                         <span class="inline-block relative">
                             New & Insights
                             <span
-                                class="absolute bottom-[-2px] left-0 w-0 h-[2px] bg-brand-blue transition-all duration-300 group-hover:w-full"
+                                class="absolute bottom-0.5 left-0 w-0 h-0.5 bg-brand-blue transition-all duration-300 group-hover:w-full"
                             ></span>
                         </span>
                     </a>
@@ -227,7 +239,7 @@ onMounted(() => {
                         <span class="inline-block relative">
                             Contact Us
                             <span
-                                class="absolute bottom-[-2px] left-0 w-0 h-[2px] bg-brand-blue transition-all duration-300 group-hover:w-full"
+                                class="absolute bottom-0.5 left-0 w-0 h-0.5 bg-brand-blue transition-all duration-300 group-hover:w-full"
                             ></span>
                         </span>
                     </a>
