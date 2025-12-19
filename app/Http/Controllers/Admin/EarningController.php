@@ -58,23 +58,36 @@ class EarningController extends Controller
     }
 
     public function export(Request $request, $format)
-    {
-        $filter = $request->query('filter', 'daily');
-        $data = $this->getPivotedData($filter);
-        $types = PercentageType::all();
+{
+    $filter = $request->query('filter', 'daily');
+    $data = $this->getPivotedData($filter);
+    $types = PercentageType::all();
 
-        if ($format === 'pdf') {
-            $pdf = Pdf::loadView('exports.earnings_pdf', compact('data', 'types', 'filter'));
-            return $pdf->download("earnings_{$filter}_report.pdf");
+    if ($format === 'pdf') {
+        // We use setPaper 'landscape' because tables with many columns are wide
+        $pdf = Pdf::loadView('exports.earnings_pdf', compact('data', 'types', 'filter'))
+                  ->setPaper('a4', 'landscape');
+        return $pdf->download("earnings_{$filter}_report.pdf");
+    }
+
+    // Fixed Anonymous Class with declared properties
+    return Excel::download(new class($data, $types) implements \Maatwebsite\Excel\Concerns\FromCollection, \Maatwebsite\Excel\Concerns\WithHeadings {
+        // Declaring these fixes the "red lines"
+        private $data;
+        private $types;
+
+        public function __construct($data, $types) {
+            $this->data = $data;
+            $this->types = $types;
         }
 
-        // Anonymous class for Excel/CSV Export
-        return Excel::download(new class($data, $types) implements \Maatwebsite\Excel\Concerns\FromCollection, \Maatwebsite\Excel\Concerns\WithHeadings {
-            public function __construct($data, $types) { $this->data = $data; $this->types = $types; }
-            public function collection() { return $this->data; }
-            public function headings(): array {
-                return array_merge(['Period', 'Total'], $this->types->pluck('name')->toArray());
-            }
-        }, "earnings_{$filter}.{$format}");
-    }
+        public function collection() {
+            return $this->data;
+        }
+
+        public function headings(): array {
+            return array_merge(['Period', 'Total Amount'], $this->types->pluck('name')->toArray());
+        }
+    }, "earnings_{$filter}.{$format}");
+}
 }
