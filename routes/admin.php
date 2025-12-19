@@ -23,3 +23,4 @@ Route::put('/admin/allocation/{allocation}', [AllocationController::class, 'upda
 Route::delete('/admin/allocation/{allocation}', [AllocationController::class, 'destroy'])->name('admin.allocation.destroy');
 
 Route::get('/admin/earning', [EarningController::class, 'index'])->name('admin.earning');
+Route::get('/admin/earning/export/{format}', [EarningController::class, 'export'])->name('admin.earning.export');

@@ -1,6 +1,6 @@
 <script setup>
 import { h, computed } from "vue";
-import { Head, router } from "@inertiajs/vue3"; // Added router for filtering
+import { Head, router } from "@inertiajs/vue3";
 import { useVueTable, getCoreRowModel, FlexRender } from "@tanstack/vue-table";
 import {
     Table,
@@ -15,27 +15,26 @@ const props = defineProps({
     totalCollected: Number,
     percentageTypes: Array,
     tableData: Array,
-    currentFilter: String, // Pass this from controller to show active state
+    currentFilter: String,
 });
 
-// Function to handle the filter change
 const handleFilterChange = (event) => {
     router.get(
         "/admin/earning",
         { filter: event.target.value },
-        {
-            preserveState: true,
-            replace: true,
-        }
+        { preserveState: true, replace: true }
     );
 };
 
-// Dynamic Column Definition
+const exportReport = (format) => {
+    window.location.href = `/admin/earning/export/${format}?filter=${props.currentFilter}`;
+};
+
 const columns = computed(() => {
     const cols = [
         {
             accessorKey: "date",
-            header: "Period", // Changed from Date to Period for Weekly/Monthly context
+            header: "Period",
             cell: ({ row }) =>
                 h(
                     "span",
@@ -55,19 +54,18 @@ const columns = computed(() => {
         },
     ];
 
-    // Add a column for every percentage type (Tax, Bank, etc.)
     props.percentageTypes.forEach((type) => {
         cols.push({
             accessorKey: type.name,
             header: type.name.replace("_", " "),
-            cell: ({ row }) => {
-                const val = row.original[type.name] || 0;
-                return h(
+            cell: ({ row }) =>
+                h(
                     "span",
                     { class: "text-brand-gray" },
-                    `₱${parseFloat(val).toLocaleString()}`
-                );
-            },
+                    `₱${parseFloat(
+                        row.original[type.name] || 0
+                    ).toLocaleString()}`
+                ),
         });
     });
 
@@ -97,11 +95,38 @@ const table = useVueTable({
                         Earnings Report
                     </h1>
                     <p class="text-brand-gray text-sm">
-                        Financial distribution breakdown grouped by period.
+                        Financial distribution grouped by period.
                     </p>
                 </div>
 
                 <div class="flex items-center gap-4">
+                    <div class="flex flex-col">
+                        <label
+                            class="text-[10px] uppercase text-brand-gray font-bold mb-1"
+                            >Export</label
+                        >
+                        <div class="flex gap-1">
+                            <button
+                                @click="exportReport('csv')"
+                                class="bg-brand-light-black border border-brand-border-black hover:bg-brand-blue/20 px-3 py-2 rounded-lg text-xs"
+                            >
+                                CSV
+                            </button>
+                            <button
+                                @click="exportReport('xlsx')"
+                                class="bg-brand-light-black border border-brand-border-black hover:bg-brand-blue/20 px-3 py-2 rounded-lg text-xs"
+                            >
+                                Excel
+                            </button>
+                            <button
+                                @click="exportReport('pdf')"
+                                class="bg-brand-light-black border border-brand-border-black hover:bg-brand-blue/20 px-3 py-2 rounded-lg text-xs"
+                            >
+                                PDF
+                            </button>
+                        </div>
+                    </div>
+
                     <div class="flex flex-col">
                         <label
                             class="text-[10px] uppercase text-brand-gray font-bold mb-1"
@@ -110,7 +135,7 @@ const table = useVueTable({
                         <select
                             @change="handleFilterChange"
                             :value="currentFilter || 'daily'"
-                            class="bg-brand-light-black border border-brand-border-black text-white rounded-lg px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-blue"
+                            class="bg-brand-light-black border border-brand-border-black text-white rounded-lg px-4 py-2 text-sm outline-none"
                         >
                             <option value="daily">Daily</option>
                             <option value="weekly">Weekly</option>
@@ -147,7 +172,7 @@ const table = useVueTable({
                                 <TableHead
                                     v-for="header in headerGroup.headers"
                                     :key="header.id"
-                                    class="text-white font-bold uppercase text-[10px] p-4 tracking-wider"
+                                    class="text-white font-bold uppercase text-[10px] p-4"
                                 >
                                     <FlexRender
                                         :render="header.column.columnDef.header"
@@ -173,15 +198,6 @@ const table = useVueTable({
                                     />
                                 </TableCell>
                             </TableRow>
-
-                            <tr v-if="tableData.length === 0">
-                                <td
-                                    :colspan="percentageTypes.length + 2"
-                                    class="p-12 text-center text-brand-gray italic"
-                                >
-                                    No paid transactions found for this period.
-                                </td>
-                            </tr>
                         </TableBody>
                     </Table>
                 </div>
