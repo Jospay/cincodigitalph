@@ -2,20 +2,22 @@
 import { ref, onMounted, onBeforeUnmount } from "vue";
 
 // --- IMPORT VIDEO AND POSTER ASSETS ---
-// Import video (.mp4) and poster image (.jpg) for each entry
+// Import video (.mp4)
 import teaser1_video from "@/assets/video/2026 teaser 1.mp4";
-import teaser1_poster from "@/assets/thumbnail/2026 teaser 1.jpg";
 import teaser2_video from "@/assets/video/2026 teaser 2.mp4";
-import teaser2_poster from "@/assets/thumbnail/2026 teaser 2.jpg";
 import newTeaser1_video from "@/assets/video/2026 new teaser 1.mp4";
-import newTeaser1_poster from "@/assets/thumbnail/2026 new teaser 1.jpg";
 import newTeaser2_video from "@/assets/video/2026 new teaser 2.mp4";
-import newTeaser2_poster from "@/assets/thumbnail/2026 new teaser 2.jpg";
 import newTeaser3_video from "@/assets/video/2026 new teaser 3.mp4";
-import newTeaser3_poster from "@/assets/thumbnail/2026 new teaser 3.jpg";
 import avp1_video from "@/assets/video/2026 avp 1.mp4";
-import avp1_poster from "@/assets/thumbnail/2026 avp 1.jpg";
 import avp2_video from "@/assets/video/2026 avp 2.mp4";
+
+// Import (.jpg)
+import teaser1_poster from "@/assets/thumbnail/2026 teaser 1.jpg";
+import teaser2_poster from "@/assets/thumbnail/2026 teaser 2.jpg";
+import newTeaser1_poster from "@/assets/thumbnail/2026 new teaser 1.jpg";
+import newTeaser2_poster from "@/assets/thumbnail/2026 new teaser 2.jpg";
+import newTeaser3_poster from "@/assets/thumbnail/2026 new teaser 3.jpg";
+import avp1_poster from "@/assets/thumbnail/2026 avp 1.jpg";
 import avp2_poster from "@/assets/thumbnail/2026 avp 2.jpg";
 
 let owl2 = null;

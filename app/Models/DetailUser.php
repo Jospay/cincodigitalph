@@ -1,7 +1,4 @@
 <?php
-
-// app/Models/DetailUser.php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,7 +8,6 @@ class DetailUser extends Model
 {
     use HasFactory;
 
-    // Note the snake_case table name for your migration
     protected $table = 'detail_user';
 
     protected $fillable = [
@@ -25,4 +21,9 @@ class DetailUser extends Model
         'verification_account',
         'status',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

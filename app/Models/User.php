@@ -1,7 +1,5 @@
 <?php
 
-// app/Models/User.php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,7 +9,6 @@ class User extends Model
 {
     use HasFactory;
 
-    // By default, Laravel looks for 'users'. If you changed the table name, update it here.
     protected $table = 'users';
 
     protected $fillable = [
