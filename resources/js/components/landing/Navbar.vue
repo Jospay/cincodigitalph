@@ -244,9 +244,9 @@ onMounted(() => {
                         </span>
                     </a>
 
-                    <a href="/join">
+                    <a href="https://bb88.test" target="_blank" rel="noopener">
                         <button
-                            class="bg-brand-blue text-white px-5 py-1 rounded"
+                            class="bg-brand-blue text-white px-5 py-1 rounded cursor-pointer"
                         >
                             Join 2026 Event
                         </button>
@@ -324,9 +324,9 @@ onMounted(() => {
                 >Contact Us</a
             >
 
-            <a href="/join">
+            <a href="https://bb88.test" target="_blank" rel="noopener">
                 <button
-                    class="bg-brand-blue text-white px-5 py-1 rounded ms-3 mt-3 mb-2"
+                    class="bg-brand-blue text-white px-5 py-1 rounded ms-3 mt-3 mb-2 cursor-pointer"
                 >
                     Join 2026 Event
                 </button>

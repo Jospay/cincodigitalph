@@ -154,13 +154,13 @@ onBeforeUnmount(() => {
                 <div class="lg:col-span-8 col-span-12 left-carousel">
                     <div class="relative">
                         <button
-                            class="absolute top-1/2 sm:start-4 start-1 -translate-y-1/2 z-10 bg-brand-blue text-white bg-left-half123 rounded-full sm:h-[40px] h-[35px] sm:w-[40px] w-[35px] border-2 border-white opacity-50"
+                            class="absolute top-1/2 sm:start-4 start-1 -translate-y-1/2 z-10 bg-brand-blue text-white bg-left-half123 rounded-full sm:h-[40px] h-[35px] sm:w-[40px] w-[35px] border-2 border-white opacity-50 cursor-pointer"
                         >
                             <i class="fa-solid fa-chevron-left"></i>
                         </button>
 
                         <button
-                            class="absolute top-1/2 sm:end-4 end-1 -translate-y-1/2 z-10 bg-brand-blue text-white bg-right-half rounded-full sm:h-[40px] h-[35px] sm:w-[40px] w-[35px] border-2 border-white opacity-50"
+                            class="absolute top-1/2 sm:end-4 end-1 -translate-y-1/2 z-10 bg-brand-blue text-white bg-right-half rounded-full sm:h-[40px] h-[35px] sm:w-[40px] w-[35px] border-2 border-white opacity-50 cursor-pointer"
                         >
                             <i class="fa-solid fa-chevron-right"></i>
                         </button>

@@ -81,7 +81,7 @@ onMounted(() => {
                     style="z-index: 5"
                 >
                     <button
-                        class="bg-brand-blue text-white bg-left-owl1 rounded-[50%] sm:h-[40px] h-[35px] sm:w-[40px] w-[35px] border-2 border-white opacity-50"
+                        class="bg-brand-blue text-white bg-left-owl1 rounded-[50%] sm:h-[40px] h-[35px] sm:w-[40px] w-[35px] border-2 border-white opacity-50 cursor-pointer"
                     >
                         <i class="fa-solid fa-chevron-left"></i>
                     </button>
@@ -92,7 +92,7 @@ onMounted(() => {
                     style="z-index: 5"
                 >
                     <button
-                        class="bg-brand-blue text-white bg-right-owl1 rounded-[50%] sm:h-[40px] h-[35px] sm:w-[40px] w-[35px] border-2 border-white opacity-50"
+                        class="bg-brand-blue text-white bg-right-owl1 rounded-[50%] sm:h-[40px] h-[35px] sm:w-[40px] w-[35px] border-2 border-white opacity-50 cursor-pointer"
                     >
                         <i class="fa-solid fa-chevron-right"></i>
                     </button>
@@ -201,13 +201,13 @@ onMounted(() => {
             </div>
 
             <!-- Start Button -->
-            <div class="text-center pt-9">
+            <!-- <div class="text-center pt-9">
                 <button
                     class="bg-brand-green px-20 text-white font-bold text-2xl rounded-xl py-2"
                 >
                     Apply Now
                 </button>
-            </div>
+            </div> -->
             <!-- End Button -->
         </div>
     </div>

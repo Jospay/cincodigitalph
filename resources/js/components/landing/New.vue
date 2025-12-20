@@ -105,7 +105,7 @@ onMounted(() => {
                     style="z-index: 5"
                 >
                     <button
-                        class="bg-brand-blue text-white bg-left-owl0 rounded-[50%] sm:h-[40px] h-[35px] sm:w-[40px] w-[35px] border-2 border-white opacity-50"
+                        class="bg-brand-blue text-white bg-left-owl0 rounded-[50%] sm:h-[40px] h-[35px] sm:w-[40px] w-[35px] border-2 border-white opacity-50 cursor-pointer"
                     >
                         <i class="fa-solid fa-chevron-left"></i>
                     </button>
@@ -116,7 +116,7 @@ onMounted(() => {
                     style="z-index: 5"
                 >
                     <button
-                        class="bg-brand-blue text-white bg-right-owl0 rounded-[50%] sm:h-[40px] h-[35px] sm:w-[40px] w-[35px] border-2 border-white opacity-50"
+                        class="bg-brand-blue text-white bg-right-owl0 rounded-[50%] sm:h-[40px] h-[35px] sm:w-[40px] w-[35px] border-2 border-white opacity-50 cursor-pointer"
                     >
                         <i class="fa-solid fa-chevron-right"></i>
                     </button>

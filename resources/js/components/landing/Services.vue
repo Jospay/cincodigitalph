@@ -82,7 +82,7 @@ onMounted(() => {
                 <!-- Start filter development -->
                 <button
                     data-filter="development"
-                    class="filter-btn py-2 px-3 sm:px-6 transition duration-300 ease-in-out border-b-4 border-brand-blue text-brand-blue"
+                    class="filter-btn py-2 px-3 sm:px-6 transition duration-300 ease-in-out border-b-4 border-brand-blue text-brand-blue cursor-pointer"
                 >
                     GAME DEVELOPMENT & DESIGN
                 </button>
@@ -91,7 +91,7 @@ onMounted(() => {
                 <!-- Start filter marketing -->
                 <button
                     data-filter="marketing"
-                    class="filter-btn py-2 px-3 sm:px-6 transition duration-300 ease-in-out border-b-4 border-transparent hover:border-brand-blue"
+                    class="filter-btn py-2 px-3 sm:px-6 transition duration-300 ease-in-out border-b-4 border-transparent hover:border-brand-blue cursor-pointer"
                 >
                     GAME MARKETING & GROWTH
                 </button>
@@ -100,7 +100,7 @@ onMounted(() => {
                 <!-- Start filter post-launch -->
                 <button
                     data-filter="post-launch"
-                    class="filter-btn py-2 px-3 sm:px-6 transition duration-300 ease-in-out border-b-4 border-transparent hover:border-brand-blue"
+                    class="filter-btn py-2 px-3 sm:px-6 transition duration-300 ease-in-out border-b-4 border-transparent hover:border-brand-blue cursor-pointer"
                 >
                     POST-LAUNCH & LIVE SERVICES
                 </button>

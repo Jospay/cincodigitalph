@@ -5,21 +5,21 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 // GET route to serve the registration form page
-Route::get('/register', function () {
-    return Inertia::render('auth/registration/Index', [
-        'flash' => session()->only(['status', 'error']),
-    ]);
-});
+// Route::get('/register', function () {
+//     return Inertia::render('auth/registration/Index', [
+//         'flash' => session()->only(['status', 'error']),
+//     ]);
+// });
 
-Route::get('/admin/login', function () {
-    return Inertia::render('auth/login/Index');
-});
+// Route::get('/admin/login', function () {
+//     return Inertia::render('auth/login/Index');
+// });
 
 // --- API Endpoint for Registration ---
-Route::post('/api/register', [RegistrationController::class, 'register']);
+// Route::post('/api/register', [RegistrationController::class, 'register']);
 
 // 1. PayMongo Success URL (Verification Handler)
-Route::get('/payment/verify', [RegistrationController::class, 'handlePaymentSuccess']);
+// Route::get('/payment/verify', [RegistrationController::class, 'handlePaymentSuccess']);
 
 // 2. Final Success Page (Inertia Renderer)
-Route::get('/payment/success', [PaymentController::class, 'success']);
+// Route::get('/payment/success', [PaymentController::class, 'success']);

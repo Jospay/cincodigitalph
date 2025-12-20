@@ -86,16 +86,16 @@ onMounted(() => {
                 <div>
                     <a href="#services">
                         <button
-                            class="bg-white text-brand-blue md:w-[350px] sm:w-[400px] w-[300px] py-2 font-bold text-2xl rounded-[10px]"
+                            class="bg-white text-brand-blue md:w-[350px] sm:w-[400px] w-[300px] py-2 font-bold text-2xl rounded-[10px] cursor-pointer"
                         >
                             Explore Our Services
                         </button>
                     </a>
                 </div>
                 <div>
-                    <a href="/join">
+                    <a href="https://bb88.test" target="_blank" rel="noopener">
                         <button
-                            class="text-white bg-brand-blue md:w-[300px] sm:w-[400px] w-[300px] py-2 font-bold text-2xl rounded-[10px]"
+                            class="text-white bg-brand-blue md:w-[300px] sm:w-[400px] w-[300px] py-2 font-bold text-2xl rounded-[10px] cursor-pointer"
                         >
                             Join Our Team
                         </button>
@@ -111,7 +111,7 @@ onMounted(() => {
                     style="z-index: 5"
                 >
                     <button
-                        class="bg-brand-blue text-white bg-left-half-1 rounded-[50%] sm:h-[40px] h-[35px] sm:w-[40px] w-[35px] opacity-50"
+                        class="bg-brand-blue text-white bg-left-half-1 rounded-[50%] sm:h-[40px] h-[35px] sm:w-[40px] w-[35px] opacity-50 cursor-pointer"
                         style="border: none"
                     >
                         <i class="fa-solid fa-chevron-left"></i>
@@ -123,7 +123,7 @@ onMounted(() => {
                     style="z-index: 5"
                 >
                     <button
-                        class="bg-brand-blue text-white bg-right-half-1 rounded-[50%] sm:h-[40px] h-[35px] sm:w-[40px] w-[35px] opacity-50"
+                        class="bg-brand-blue text-white bg-right-half-1 rounded-[50%] sm:h-[40px] h-[35px] sm:w-[40px] w-[35px] opacity-50 cursor-pointer"
                         style="border: none"
                     >
                         <i class="fa-solid fa-chevron-right"></i>

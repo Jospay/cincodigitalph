@@ -13,13 +13,13 @@ Route::get('/', function () {
     return Inertia::render('Index');
 });
 
-Route::get('/join', function () {
-    return Inertia::render('join/Index');
-});
+// Route::get('/join', function () {
+//     return Inertia::render('join/Index');
+// });
 
-Route::get('/sample', function () {
-    return Inertia::render('auth/registration/sample');
-});
+// Route::get('/sample', function () {
+//     return Inertia::render('auth/registration/sample');
+// });
 
 Route::get('/privacy-policy', function () {
     return Inertia::render('privacy-policy/Index');

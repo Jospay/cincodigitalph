@@ -149,166 +149,157 @@ const table = useVueTable({
 
 <template>
     <Head title="User Management" />
+    <div class="space-y-6 text-white">
+        <div class="flex flex-col gap-1">
+            <h1 class="text-3xl font-bold tracking-tight text-brand-blue">
+                User Management
+            </h1>
+            <p class="text-brand-gray text-sm">
+                Manage tournament players, payments, and shirt collection.
+            </p>
+        </div>
 
-    <div class="min-h-screen text-white p-6">
-        <div class="max-w-7xl mx-auto space-y-6">
-            <div class="flex flex-col gap-1">
-                <h1 class="text-3xl font-bold tracking-tight text-brand-blue">
-                    User Management
-                </h1>
-                <p class="text-brand-gray text-sm">
-                    Manage tournament players, payments, and shirt collection.
-                </p>
-            </div>
+        <div
+            class="bg-brand-dark-black rounded-2xl p-6 border border-brand-border-black shadow-2xl"
+        >
+            <div class="w-full space-y-4">
+                <div
+                    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4"
+                >
+                    <Input
+                        placeholder="Search by email..."
+                        :model-value="
+                            table.getColumn('email')?.getFilterValue()
+                        "
+                        @update:model-value="
+                            table.getColumn('email')?.setFilterValue($event)
+                        "
+                        class="bg-brand-light-black border-brand-border-black text-white"
+                    />
 
-            <div
-                class="bg-brand-dark-black rounded-2xl p-6 border border-brand-border-black shadow-2xl"
-            >
-                <div class="w-full space-y-4">
-                    <div
-                        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4"
+                    <select
+                        class="bg-brand-light-black border-brand-border-black text-white rounded-md px-3 py-2 text-sm outline-none"
+                        :value="
+                            table
+                                .getColumn('user_transaction_status')
+                                ?.getFilterValue() ?? ''
+                        "
+                        @change="
+                            table
+                                .getColumn('user_transaction_status')
+                                ?.setFilterValue(
+                                    $event.target.value || undefined
+                                )
+                        "
                     >
-                        <Input
-                            placeholder="Search by email..."
-                            :model-value="
-                                table.getColumn('email')?.getFilterValue()
-                            "
-                            @update:model-value="
-                                table.getColumn('email')?.setFilterValue($event)
-                            "
-                            class="bg-brand-light-black border-brand-border-black text-white"
-                        />
+                        <option value="">All Payment Status</option>
+                        <option value="paid">Paid</option>
+                        <option value="pending_payment">Pending Payment</option>
+                        <option value="pending_registration">
+                            Pending Reg
+                        </option>
+                        <option value="failed">Failed</option>
+                    </select>
 
-                        <select
-                            class="bg-brand-light-black border-brand-border-black text-white rounded-md px-3 py-2 text-sm outline-none"
-                            :value="
-                                table
-                                    .getColumn('user_transaction_status')
-                                    ?.getFilterValue() ?? ''
-                            "
-                            @change="
-                                table
-                                    .getColumn('user_transaction_status')
-                                    ?.setFilterValue(
-                                        $event.target.value || undefined
-                                    )
-                            "
-                        >
-                            <option value="">All Payment Status</option>
-                            <option value="paid">Paid</option>
-                            <option value="pending_payment">
-                                Pending Payment
-                            </option>
-                            <option value="pending_registration">
-                                Pending Reg
-                            </option>
-                            <option value="failed">Failed</option>
-                        </select>
-
-                        <select
-                            class="bg-brand-light-black border-brand-border-black text-white rounded-md px-3 py-2 text-sm outline-none"
-                            :value="
-                                table
-                                    .getColumn('account_type')
-                                    ?.getFilterValue() ?? ''
-                            "
-                            @change="
-                                table
-                                    .getColumn('account_type')
-                                    ?.setFilterValue(
-                                        $event.target.value || undefined
-                                    )
-                            "
-                        >
-                            <option value="">All Account Types</option>
-                            <option value="Player">Player</option>
-                            <option value="Shirt">Shirt</option>
-                        </select>
-
-                        <select
-                            class="bg-brand-light-black border-brand-border-black text-white rounded-md px-3 py-2 text-sm outline-none"
-                            :value="
-                                table
-                                    .getColumn('verification_account')
-                                    ?.getFilterValue() ?? ''
-                            "
-                            @change="
-                                table
-                                    .getColumn('verification_account')
-                                    ?.setFilterValue(
-                                        $event.target.value || undefined
-                                    )
-                            "
-                        >
-                            <option value="">All Verification</option>
-                            <option value="1">Verified</option>
-                            <option value="0">Unverified</option>
-                        </select>
-
-                        <select
-                            class="bg-brand-light-black border-brand-border-black text-white rounded-md px-3 py-2 text-sm outline-none"
-                            :value="
-                                table.getColumn('status')?.getFilterValue() ??
-                                ''
-                            "
-                            @change="
-                                table
-                                    .getColumn('status')
-                                    ?.setFilterValue(
-                                        $event.target.value || undefined
-                                    )
-                            "
-                        >
-                            <option value="">All Shirt Status</option>
-                            <option value="claimed">Claimed</option>
-                            <option value="pending">Pending</option>
-                        </select>
-                    </div>
-
-                    <div
-                        class="rounded-xl border border-brand-border-black overflow-hidden bg-brand-dark-black"
+                    <select
+                        class="bg-brand-light-black border-brand-border-black text-white rounded-md px-3 py-2 text-sm outline-none"
+                        :value="
+                            table.getColumn('account_type')?.getFilterValue() ??
+                            ''
+                        "
+                        @change="
+                            table
+                                .getColumn('account_type')
+                                ?.setFilterValue(
+                                    $event.target.value || undefined
+                                )
+                        "
                     >
-                        <Table>
-                            <TableHeader class="bg-brand-light-black">
-                                <TableRow
-                                    v-for="headerGroup in table.getHeaderGroups()"
-                                    :key="headerGroup.id"
+                        <option value="">All Account Types</option>
+                        <option value="Player">Player</option>
+                        <option value="Shirt">Shirt</option>
+                    </select>
+
+                    <select
+                        class="bg-brand-light-black border-brand-border-black text-white rounded-md px-3 py-2 text-sm outline-none"
+                        :value="
+                            table
+                                .getColumn('verification_account')
+                                ?.getFilterValue() ?? ''
+                        "
+                        @change="
+                            table
+                                .getColumn('verification_account')
+                                ?.setFilterValue(
+                                    $event.target.value || undefined
+                                )
+                        "
+                    >
+                        <option value="">All Verification</option>
+                        <option value="1">Verified</option>
+                        <option value="0">Unverified</option>
+                    </select>
+
+                    <select
+                        class="bg-brand-light-black border-brand-border-black text-white rounded-md px-3 py-2 text-sm outline-none"
+                        :value="
+                            table.getColumn('status')?.getFilterValue() ?? ''
+                        "
+                        @change="
+                            table
+                                .getColumn('status')
+                                ?.setFilterValue(
+                                    $event.target.value || undefined
+                                )
+                        "
+                    >
+                        <option value="">All Shirt Status</option>
+                        <option value="claimed">Claimed</option>
+                        <option value="pending">Pending</option>
+                    </select>
+                </div>
+
+                <div
+                    class="rounded-xl border border-brand-border-black overflow-hidden bg-brand-dark-black"
+                >
+                    <Table>
+                        <TableHeader class="bg-brand-light-black">
+                            <TableRow
+                                v-for="headerGroup in table.getHeaderGroups()"
+                                :key="headerGroup.id"
+                            >
+                                <TableHead
+                                    v-for="header in headerGroup.headers"
+                                    :key="header.id"
+                                    class="text-white font-bold py-4 uppercase text-xs"
                                 >
-                                    <TableHead
-                                        v-for="header in headerGroup.headers"
-                                        :key="header.id"
-                                        class="text-white font-bold py-4 uppercase text-xs"
-                                    >
-                                        <FlexRender
-                                            v-if="!header.isPlaceholder"
-                                            :render="
-                                                header.column.columnDef.header
-                                            "
-                                            :props="header.getContext()"
-                                        />
-                                    </TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                <TableRow
-                                    v-for="row in table.getRowModel().rows"
-                                    :key="row.id"
-                                    class="border-b border-brand-border-black hover:bg-brand-blue/5"
+                                    <FlexRender
+                                        v-if="!header.isPlaceholder"
+                                        :render="header.column.columnDef.header"
+                                        :props="header.getContext()"
+                                    />
+                                </TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            <TableRow
+                                v-for="row in table.getRowModel().rows"
+                                :key="row.id"
+                                class="border-b border-brand-border-black hover:bg-brand-blue/5"
+                            >
+                                <TableCell
+                                    v-for="cell in row.getVisibleCells()"
+                                    :key="cell.id"
+                                    class="py-4 px-4"
                                 >
-                                    <TableCell
-                                        v-for="cell in row.getVisibleCells()"
-                                        :key="cell.id"
-                                        class="py-4 px-4"
-                                    >
-                                        <FlexRender
-                                            :render="cell.column.columnDef.cell"
-                                            :props="cell.getContext()"
-                                        />
-                                    </TableCell>
-                                </TableRow>
-                            </TableBody>
-                        </Table>
-                    </div>
+                                    <FlexRender
+                                        :render="cell.column.columnDef.cell"
+                                        :props="cell.getContext()"
+                                    />
+                                </TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
                 </div>
             </div>
         </div>
