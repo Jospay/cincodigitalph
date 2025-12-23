@@ -244,7 +244,11 @@ onMounted(() => {
                         </span>
                     </a>
 
-                    <a href="https://bb88.test" target="_blank" rel="noopener">
+                    <a
+                        href="https://mobaebz.bb88advertising.com/"
+                        target="_blank"
+                        rel="noopener"
+                    >
                         <button
                             class="bg-brand-blue text-white px-5 py-1 rounded cursor-pointer"
                         >
@@ -324,7 +328,11 @@ onMounted(() => {
                 >Contact Us</a
             >
 
-            <a href="https://bb88.test" target="_blank" rel="noopener">
+            <a
+                href="https://mobaebz.bb88advertising.com/"
+                target="_blank"
+                rel="noopener"
+            >
                 <button
                     class="bg-brand-blue text-white px-5 py-1 rounded ms-3 mt-3 mb-2 cursor-pointer"
                 >

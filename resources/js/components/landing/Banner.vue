@@ -93,7 +93,11 @@ onMounted(() => {
                     </a>
                 </div>
                 <div>
-                    <a href="https://bb88.test" target="_blank" rel="noopener">
+                    <a
+                        href="https://mobaebz.bb88advertising.com/"
+                        target="_blank"
+                        rel="noopener"
+                    >
                         <button
                             class="text-white bg-brand-blue md:w-[300px] sm:w-[400px] w-[300px] py-2 font-bold text-2xl rounded-[10px] cursor-pointer"
                         >
