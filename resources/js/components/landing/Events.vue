@@ -185,7 +185,7 @@ onBeforeUnmount(() => {
                 </div>
 
                 <div
-                    class="lg:col-span-4 col-span-12 border right-thumbs-container lg:block hidden"
+                    class="lg:col-span-4 col-span-12 right-thumbs-container lg:block hidden"
                 >
                     <div
                         class="bg-black border-2 p-2 border-brand-red rounded-xl"
